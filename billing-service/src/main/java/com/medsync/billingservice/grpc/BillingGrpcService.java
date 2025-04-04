@@ -65,6 +65,7 @@ public class BillingGrpcService extends BillingServiceImplBase {
                     .setName(account.get().getName())
                     .setEmail(account.get().getEmail())
                     .setStatus(account.get().getStatus().name())
+                    .setPatientId(account.get().getPatientId().toString())
                     .build();
 
             respObserver.onNext(response);

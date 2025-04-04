@@ -18,7 +18,6 @@ public class BillingAccountService {
     private BillingAccountRepository billingAccountRepository;
 
     public BillingAccount createBillingAccount(BillingAccount billingAccount){
-        billingAccount.setId(UUID.randomUUID());
         billingAccount.setStatus(BillingStatus.ACTIVE);
         return billingAccountRepository.save(billingAccount);
     }

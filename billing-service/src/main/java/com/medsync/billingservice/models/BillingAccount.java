@@ -23,10 +23,10 @@ public class BillingAccount {
     @Column(nullable = false)
     private UUID patientId;
 
-    @Email
     @Column(nullable = false)
     private String name;
 
+    @Email
     @Column(nullable = false, unique = true)
     private String email;
 
