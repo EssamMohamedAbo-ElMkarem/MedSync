@@ -12,7 +12,9 @@ import com.medsync.patientservice.dtos.PatientResponseDTO;
 import com.medsync.patientservice.exceptions.EmailAlreadyExistsException;
 import com.medsync.patientservice.exceptions.PatientNotFoundException;
 import com.medsync.patientservice.grpc.BillingGrpcClient;
+import com.medsync.patientservice.kafka.KafkaProducer;
 import com.medsync.patientservice.mappers.PatientMapper;
+import com.medsync.patientservice.models.EventType;
 import com.medsync.patientservice.models.Patient;
 import com.medsync.patientservice.repositories.PatientRepository;
 
@@ -24,6 +26,9 @@ public class PatientService {
 
     @Autowired
     private BillingGrpcClient billingGrpcClient;
+
+    @Autowired
+    private KafkaProducer kafkaProducer;
 
     public List<PatientResponseDTO> getPatients() {
         return patientRepository.findAll()
@@ -45,6 +50,8 @@ public class PatientService {
             patientRepository.save(newPatient);
             billingGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(),
                     newPatient.getEmail());
+            // Send kafka PATIENT_CREATED event
+            kafkaProducer.sendEvent(newPatient, EventType.PATIENT_CREATED);
             return PatientMapper.toDTO(newPatient);
         }
     }
@@ -67,7 +74,10 @@ public class PatientService {
         return PatientMapper.toDTO(updatedPatient);
     }
 
-    public void deletePatient(UUID id) {
+    public void deletePatient(UUID id) throws PatientNotFoundException {
+        Patient patient = patientRepository.findById(id)
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with ID: " + id.toString()));
+        kafkaProducer.sendEvent(patient, EventType.PATIENT_DELETED);
         patientRepository.deleteById(id);
     }
 

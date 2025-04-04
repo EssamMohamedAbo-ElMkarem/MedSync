@@ -71,7 +71,7 @@ public class PatientResource {
 
     @Operation(summary = "Delete a patient", description = "Deletes a patient based on the provided ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePatient(@PathVariable UUID id){
+    public ResponseEntity<Void> deletePatient(@PathVariable UUID id) throws PatientNotFoundException{
         patientService.deletePatient(id);
         return ResponseEntity.noContent().build();
     }
