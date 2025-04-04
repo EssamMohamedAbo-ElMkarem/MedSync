@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "billing";
+
+service BillingService {
+    // Create a new billing account
+    rpc CreateBillingAccount(BillingRequest) returns (BillingResponse);
+
+    // Retrieve billing account details
+    rpc GetBillingAccount(BillingAccountRequest) returns (BillingAccountResponse);
+
+    // Update billing account details
+    rpc UpdateBillingAccount(UpdateBillingRequest) returns (BillingResponse);
+
+    // Delete a billing account
+    rpc DeleteBillingAccount(BillingAccountRequest) returns (BillingResponse);
+}
+
+message BillingRequest {
+    string patientId = 1;
+    string name = 2;
+    string email = 3;
+}
+
+message BillingResponse {
+    string accountId = 1;
+    string status = 2;
+}
+
+message BillingAccountRequest {
+    string accountId = 1;
+}
+
+message BillingAccountResponse {
+    string accountId = 1;
+    string patientId = 2;
+    string name = 3;
+    string email = 4;
+    string status = 5;
+}
+
+message UpdateBillingRequest {
+    string accountId = 1;
+    string name = 2;
+    string email = 3;
+}

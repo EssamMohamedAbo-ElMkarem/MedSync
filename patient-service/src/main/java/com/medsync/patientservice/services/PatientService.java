@@ -11,6 +11,7 @@ import com.medsync.patientservice.dtos.PatientRequestDTO;
 import com.medsync.patientservice.dtos.PatientResponseDTO;
 import com.medsync.patientservice.exceptions.EmailAlreadyExistsException;
 import com.medsync.patientservice.exceptions.PatientNotFoundException;
+import com.medsync.patientservice.grpc.BillingGrpcClient;
 import com.medsync.patientservice.mappers.PatientMapper;
 import com.medsync.patientservice.models.Patient;
 import com.medsync.patientservice.repositories.PatientRepository;
@@ -21,6 +22,9 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private BillingGrpcClient billingGrpcClient;
+
     public List<PatientResponseDTO> getPatients() {
         return patientRepository.findAll()
                 .stream().map(PatientMapper::toDTO).toList();
@@ -28,7 +32,7 @@ public class PatientService {
 
     public PatientResponseDTO getPatientById(UUID id) throws PatientNotFoundException {
         return PatientMapper.toDTO(patientRepository.findById(id)
-            .orElseThrow(() -> new PatientNotFoundException("Patient not found with ID: " + id.toString())));
+                .orElseThrow(() -> new PatientNotFoundException("Patient not found with ID: " + id.toString())));
     }
 
     public PatientResponseDTO createPatient(
@@ -37,9 +41,11 @@ public class PatientService {
             throw new EmailAlreadyExistsException("A patient with this email"
                     + " already exists " + patientRequestDTO.getEmail());
         } else {
-            return PatientMapper.toDTO(
-                    patientRepository.save(
-                            PatientMapper.toModel(patientRequestDTO)));
+            Patient newPatient = PatientMapper.toModel(patientRequestDTO);
+            patientRepository.save(newPatient);
+            billingGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(),
+                    newPatient.getEmail());
+            return PatientMapper.toDTO(newPatient);
         }
     }
 
@@ -57,11 +63,11 @@ public class PatientService {
         patient.setDateOfBirth(LocalDate.parse(patientRequestDTO.getDateOfBirth()));
 
         Patient updatedPatient = patientRepository.save(patient);
-        
+
         return PatientMapper.toDTO(updatedPatient);
     }
 
-    public void deletePatient(UUID id){
+    public void deletePatient(UUID id) {
         patientRepository.deleteById(id);
     }
 
