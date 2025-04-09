@@ -28,7 +28,7 @@ import jakarta.validation.groups.Default;
 
 @Tag(name = "Patients", description = "API for managing patients")
 @RestController
-@RequestMapping("/api/v1/patients")
+@RequestMapping("/")
 public class PatientResource {
 
     private final PatientService patientService;

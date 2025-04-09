@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/api/v1/doctors")
+@RequestMapping("/")
 @Tag(name = "Doctors", description = "CRUD operations for doctors")
 public class DoctorResource {
 
