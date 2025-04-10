@@ -26,13 +26,7 @@ MedSync is a comprehensive patient management system designed to streamline the 
 
 The MedSync system is designed with a microservices architecture where each service is responsible for a specific domain and is independently deployable. The communication between the services happens through RESTful APIs and gRPC for synchronous calls, and Kafka for asynchronous messaging. The system uses **Eureka Server** for service discovery to ensure smooth communication between the services.
 
-<img width="943" alt="eureka" src="https://github.com/user-attachments/assets/9c7b3300-b94b-410d-ba52-b4c68205c251" />
-
-<img width="925" alt="patients" src="https://github.com/user-attachments/assets/493705e1-cce2-4e2d-a0da-b6549850e0d0" />
-
-<img width="923" alt="doctors" src="https://github.com/user-attachments/assets/bf6aa80e-67cf-47db-bf51-c1fdf3831705" />
-
-<img width="926" alt="appointments" src="https://github.com/user-attachments/assets/f26974e9-c387-4ad1-9357-fd714d1b058c" />
+<img width="617" alt="image" src="https://github.com/user-attachments/assets/7c504cb8-2dda-45f6-bc35-a9a859e3f811" />
 
 ### Components:
 
