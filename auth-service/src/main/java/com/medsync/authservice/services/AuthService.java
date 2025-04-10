@@ -12,6 +12,8 @@ import com.medsync.authservice.dtos.SignupResponseDTO;
 import com.medsync.authservice.models.User;
 import com.medsync.authservice.utils.JWTUtil;
 
+import io.jsonwebtoken.JwtException;
+
 @Service
 public class AuthService {
 
@@ -40,6 +42,16 @@ public class AuthService {
             return new SignupResponseDTO("User created successfully");
         } catch (Exception e) {
             return new SignupResponseDTO("User wasn't created successfully");
+        }
+    }
+
+    public boolean validateToken(String token){
+        try {
+            jwtUtil.validateToken(token);
+            System.out.println("Trueeeeeeee");
+            return true;
+        } catch (JwtException e) {
+            return false;
         }
     }
 }
