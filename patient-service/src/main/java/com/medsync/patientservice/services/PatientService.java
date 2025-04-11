@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.medsync.patientservice.dtos.PatientRequestDTO;
@@ -30,8 +31,8 @@ public class PatientService {
     @Autowired
     private KafkaProducer kafkaProducer;
 
-    public List<PatientResponseDTO> getPatients() {
-        return patientRepository.findAll()
+    public List<PatientResponseDTO> getPatients(Pageable pageable) {
+        return patientRepository.findAll(pageable)
                 .stream().map(PatientMapper::toDTO).toList();
     }
 
