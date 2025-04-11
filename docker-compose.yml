@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    environment:
+      DB_HOST: auth-db
+      DB_PORT: 5432
+      DB_NAME: db
+      DB_USER: admin
+      DB_PASSWORD: password
+    depends_on:
+      - auth-db
+
+  patient-db:
+    image: postgres:15
+    container_name: patient-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5434:5432"
+    volumes:
+      - patient-db-data:/var/lib/postgresql/data
+
+  patient-service:
+    build: ./patient-service
+    container_name: patient-service
+    environment:
+      DB_HOST: patient-db
+      DB_PORT: 5432
+      DB_NAME: db
+      DB_USER: admin
+      DB_PASSWORD: password
+    depends_on:
+      - patient-db
+
+  doctor-db:
+    image: postgres:15
+    container_name: doctor-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5435:5432"
+    volumes:
+      - doctor-db-data:/var/lib/postgresql/data
+
+  doctor-service:
+    build: ./doctor-service
+    container_name: doctor-service
+    environment:
+      DB_HOST: doctor-db
+      DB_PORT: 5432
+      DB_NAME: db
+      DB_USER: admin
+      DB_PASSWORD: password
+    depends_on:
+      - doctor-db
+
+  appointment-db:
+    image: postgres:15
+    container_name: appointment-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5436:5432"
+    volumes:
+      - appointment-db-data:/var/lib/postgresql/data
+
+  appointment-service:
+    build: ./appointment-service
+    container_name: appointment-service
+    environment:
+      DB_HOST: appointment-db
+      DB_PORT: 5432
+      DB_NAME: db
+      DB_USER: admin
+      DB_PASSWORD: password
+    depends_on:
+      - appointment-db
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    depends_on:
+      - auth-service
+      - patient-service
+      - doctor-service
+      - appointment-service
+    ports:
+      - "8080:8080"
+
+volumes:
+  auth-db-data:
+  patient-db-data:
+  doctor-db-data:
+  appointment-db-data:
