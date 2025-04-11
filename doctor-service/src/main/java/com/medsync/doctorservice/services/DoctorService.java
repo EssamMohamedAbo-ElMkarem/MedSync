@@ -1,9 +1,10 @@
 package com.medsync.doctorservice.services;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.medsync.doctorservice.models.Doctor;
@@ -19,8 +20,8 @@ public class DoctorService {
         return doctorRepository.findById(id).orElseThrow();
     }
 
-    public List<Doctor> getAllDoctors(){
-        return doctorRepository.findAll();
+    public Page<Doctor> getAllDoctors(Pageable pageable){
+        return doctorRepository.findAll(pageable);
     }
 
     public Doctor createDoctor(Doctor doctor){
