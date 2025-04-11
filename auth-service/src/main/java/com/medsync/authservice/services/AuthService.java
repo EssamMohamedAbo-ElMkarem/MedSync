@@ -48,7 +48,6 @@ public class AuthService {
     public boolean validateToken(String token){
         try {
             jwtUtil.validateToken(token);
-            System.out.println("Trueeeeeeee");
             return true;
         } catch (JwtException e) {
             return false;

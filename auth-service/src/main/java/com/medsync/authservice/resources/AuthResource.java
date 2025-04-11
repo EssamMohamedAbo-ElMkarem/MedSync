@@ -50,8 +50,12 @@ public class AuthResource {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return authService.validateToken(authHeader.substring(7)) ? ResponseEntity.ok().build()
+        try{
+            return authService.validateToken(authHeader.substring(7)) ? ResponseEntity.ok().build()
                 : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
 }
